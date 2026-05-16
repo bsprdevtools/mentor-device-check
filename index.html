@@ -6,8 +6,8 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#0D47A1">
 <meta name="robots" content="noindex, nofollow">
-<meta http-equiv="Accept-CH" content="Sec-CH-UA-Model, Sec-CH-UA-Platform-Version">
-<meta http-equiv="Delegate-CH" content="Sec-CH-UA-Model, Sec-CH-UA-Platform-Version">
+<meta http-equiv="Accept-CH" content="Sec-CH-UA-Platform-Version">
+<meta http-equiv="Delegate-CH" content="Sec-CH-UA-Platform-Version">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="no-referrer">
 <title>機種判定 | ベスプラ</title>
@@ -21,8 +21,15 @@
     --color-text: #1A1A1A;
     --color-text-sub: #555555;
     --color-border: #E0E0E0;
-    --color-warning-banner-bg: #FFF8E1;
-    --color-warning-banner-border: #FFB300;
+    --color-success-bg: #E8F5E9;
+    --color-success-border: #43A047;
+    --color-success-text: #1B5E20;
+    --color-warning-bg: #FFF8E1;
+    --color-warning-border: #FFB300;
+    --color-warning-text: #6D4C00;
+    --color-info-bg: #E3F2FD;
+    --color-info-border: #1976D2;
+    --color-info-text: #0D47A1;
     --radius: 12px;
     --shadow: 0 2px 8px rgba(0,0,0,0.08);
   }
@@ -68,35 +75,60 @@
     border-bottom: 2px solid var(--color-primary);
     padding-bottom: 10px;
   }
-  .device-grid { display: grid; gap: 14px; }
-  .device-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--color-border);
+  .version-display {
+    text-align: center;
+    padding: 18px 12px;
   }
-  .device-item:last-child { border-bottom: none; }
-  .device-label {
+  .version-label {
     color: var(--color-text-sub);
     font-size: 1rem;
     font-weight: 500;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
   }
-  .device-value {
-    font-size: 2.0rem;
-    font-weight: 700;
+  .version-value {
+    font-size: 3.2rem;
+    font-weight: 800;
     color: var(--color-primary);
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    line-height: 1.1;
     letter-spacing: 0.02em;
-    line-height: 1.2;
-    word-break: break-all;
   }
-  .device-value.empty {
+  .version-value.empty {
     color: var(--color-text-sub);
     font-style: italic;
-    font-family: inherit;
+    font-size: 1.1rem;
     font-weight: 500;
+  }
+  .version-suffix {
+    color: var(--color-text-sub);
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .status-box {
+    padding: 16px 18px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+  .status-box.success {
+    background: var(--color-success-bg);
+    border-left: 4px solid var(--color-success-border);
+    color: var(--color-success-text);
+  }
+  .status-box.warning {
+    background: var(--color-warning-bg);
+    border-left: 4px solid var(--color-warning-border);
+    color: var(--color-warning-text);
+  }
+  .status-box.info {
+    background: var(--color-info-bg);
+    border-left: 4px solid var(--color-info-border);
+    color: var(--color-info-text);
+  }
+  .status-box .status-title {
+    font-weight: 700;
+    margin-bottom: 6px;
     font-size: 1.1rem;
   }
   .app-row {
@@ -133,9 +165,19 @@
     margin-bottom: 14px;
     font-size: 0.95rem;
     line-height: 1.6;
-    background: var(--color-warning-banner-bg);
-    border-left: 4px solid var(--color-warning-banner-border);
+    background: var(--color-warning-bg);
+    border-left: 4px solid var(--color-warning-border);
   }
+  .fallback-guide {
+    padding: 16px;
+    background: var(--color-info-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--color-info-border);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--color-info-text);
+  }
+  .fallback-guide strong { display: block; margin-bottom: 6px; }
   footer {
     text-align: center;
     padding: 20px 16px 36px;
@@ -183,15 +225,9 @@
   <section class="card android-only" id="deviceCard">
     <h2>お客様の端末</h2>
     <div id="loadingMsg" class="loading">取得中…</div>
-    <div id="deviceInfo" class="device-grid" style="display:none;">
-      <div class="device-item">
-        <span class="device-label">機種コード</span>
-        <span class="device-value" id="val-model">―</span>
-      </div>
-      <div class="device-item">
-        <span class="device-label">Androidバージョン</span>
-        <span class="device-value" id="val-platform">―</span>
-      </div>
+    <div id="deviceInfo" class="version-display" style="display:none;">
+      <div class="version-label">Androidバージョン</div>
+      <div class="version-value" id="val-platform">―</div>
     </div>
   </section>
 
@@ -199,7 +235,26 @@
 
   <section class="card" id="hcCard" style="display:none;">
     <h2>ヘルスコネクト</h2>
-    <div class="app-row">
+
+    <div class="status-box success" id="hcStatusSuccess" style="display:none;">
+      <div class="status-title">✅ 最初から使えます</div>
+      Android 14以上のため、ヘルスコネクトは端末に最初から入っています。追加のインストールは不要です。
+    </div>
+
+    <div class="status-box warning" id="hcStatusWarning" style="display:none;">
+      <div class="status-title">⚠️ インストールが必要です</div>
+      Android 13以下のため、Playストアからヘルスコネクトのインストールが必要です。
+    </div>
+
+    <div class="status-box info" id="hcStatusUnknown" style="display:none;">
+      <div class="status-title">ℹ️ 端末で確認してください</div>
+      Androidバージョンが取得できませんでした。お客様の端末で「設定 ＞ デバイス情報 ＞ Androidバージョン」を確認してください。
+      <br><br>
+      ・<strong>14以上</strong>の場合：最初から使えます（インストール不要）<br>
+      ・<strong>13以下</strong>の場合：下のボタンからインストール
+    </div>
+
+    <div class="app-row" id="hcInstallRow" style="display:none;">
       <div class="app-name">Health Connect by Android</div>
       <a class="button"
          href="https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata"
@@ -254,30 +309,14 @@ const isDebug = params.get("debug") === "1";
 if (isIOS) document.body.classList.add("is-ios");
 else if (isDesktop && !isDebug) document.body.classList.add("is-desktop");
 
-function extractAndroidVersionFromUA(ua) {
-  const m = ua.match(/Android\s+(\d+(\.\d+)?)/i);
-  return m ? m[1] : null;
-}
-
-function renderDevice(data) {
+function renderDevice(platformVer) {
   document.getElementById("loadingMsg").style.display = "none";
-  document.getElementById("deviceInfo").style.display = "grid";
+  document.getElementById("deviceInfo").style.display = "block";
 
-  const rawModel = (data.model || "").trim();
-  const platformVer = (data.platformVersion || "").trim();
-  const majorVersion = platformVer ? parseInt(platformVer.split(".")[0], 10) : null;
-
-  const modelCell = document.getElementById("val-model");
-  if (rawModel) {
-    modelCell.textContent = rawModel;
-    modelCell.classList.remove("empty");
-  } else {
-    modelCell.textContent = "取得できませんでした";
-    modelCell.classList.add("empty");
-  }
-
+  const majorVersion = platformVer ? parseInt(String(platformVer).split(".")[0], 10) : null;
   const platformCell = document.getElementById("val-platform");
-  if (platformVer) {
+
+  if (majorVersion != null && !isNaN(majorVersion)) {
     platformCell.textContent = String(majorVersion);
     platformCell.classList.remove("empty");
   } else {
@@ -286,10 +325,22 @@ function renderDevice(data) {
   }
 
   const hcCard = document.getElementById("hcCard");
-  if (majorVersion != null && majorVersion <= 13) {
-    hcCard.style.display = "block";
+  const hcSuccess = document.getElementById("hcStatusSuccess");
+  const hcWarning = document.getElementById("hcStatusWarning");
+  const hcUnknown = document.getElementById("hcStatusUnknown");
+  const hcInstallRow = document.getElementById("hcInstallRow");
+
+  hcCard.style.display = "block";
+
+  if (majorVersion == null || isNaN(majorVersion)) {
+    hcUnknown.style.display = "block";
+    hcInstallRow.style.display = "block";
+  } else if (majorVersion >= 14) {
+    hcSuccess.style.display = "block";
+    hcInstallRow.style.display = "none";
   } else {
-    hcCard.style.display = "none";
+    hcWarning.style.display = "block";
+    hcInstallRow.style.display = "block";
   }
 }
 
@@ -298,19 +349,16 @@ async function detect() {
     document.getElementById("loadingMsg").textContent = "HTTPS環境で開いてください。";
     return;
   }
-  let data = { model: "", platformVersion: "" };
+  let platformVersion = "";
+
   if (navigator.userAgentData && typeof navigator.userAgentData.getHighEntropyValues === "function") {
     try {
-      const v = await navigator.userAgentData.getHighEntropyValues(["model", "platformVersion"]);
-      data.model = v.model || "";
-      data.platformVersion = v.platformVersion || "";
+      const v = await navigator.userAgentData.getHighEntropyValues(["platformVersion"]);
+      platformVersion = v.platformVersion || "";
     } catch (e) {}
   }
-  if (!data.platformVersion) {
-    const v = extractAndroidVersionFromUA(UA);
-    if (v) data.platformVersion = v;
-  }
-  renderDevice(data);
+
+  renderDevice(platformVersion);
 }
 
 if (isAndroidUA || isDebug || (navigator.userAgentData && navigator.userAgentData.mobile)) {
