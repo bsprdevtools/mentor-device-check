@@ -1,0 +1,60 @@
+# ============================================================
+# mentor-device-check .gitignore
+# 公開リポジトリ：KazuoToyama/mentor-device-check
+# 方針：GitHub Pages（Public）で配信するため、外部に出していい
+#       「ユーザー向け配布物」だけをトラッキング対象にする。
+#       内部議論・班別作業ログ・自治体名入り資料は git 管理外。
+# ============================================================
+
+# ---- macOS ----
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# ---- エディタ ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ---- ログ・キャッシュ ----
+*.log
+*.tmp
+*.bak
+.cache/
+
+# ---- Node 系（将来ビルド工程を入れたとき用の保険） ----
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ---- 環境変数・秘密情報 ----
+.env
+.env.local
+.env.*.local
+secrets/
+*.pem
+*.key
+
+# ============================================================
+# 内部資料（公開リポジトリには含めない）
+# 必要に応じて手元の作業フォルダにだけ置いておく
+# ============================================================
+01_research.md
+02_design/
+03_implementation/
+04_review/
+05_security/
+06_pre_release_audit.md
+07_release_prep/
+_internal_README.md
+
+# ただし NFCタグ書き込みガイド・公開手順書は別途リポジトリ直下へ
+# コピーしてから公開する（07_release_prep/ そのものは公開しない）
