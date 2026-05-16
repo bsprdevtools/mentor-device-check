@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>QRコード - mentor-device-check 実機テスト用</title>
+<style>
+  body {
+    font-family: -apple-system, "Hiragino Kaku Gothic ProN", sans-serif;
+    margin: 0;
+    padding: 40px 20px;
+    background: #f5f7fa;
+    text-align: center;
+    color: #1a1a1a;
+  }
+  h1 {
+    color: #0D47A1;
+    font-size: 1.8rem;
+    margin: 0 0 10px;
+  }
+  .subtitle {
+    color: #555;
+    margin-bottom: 30px;
+  }
+  .qr-container {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 30px;
+    max-width: 500px;
+    margin: 0 auto 20px;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  .url {
+    margin-top: 20px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.95rem;
+    color: #0D47A1;
+    word-break: break-all;
+    background: #F0F4F8;
+    padding: 12px;
+    border-radius: 8px;
+  }
+  .instructions {
+    max-width: 500px;
+    margin: 30px auto 0;
+    background: #FFF8E1;
+    border-left: 4px solid #FFB300;
+    padding: 16px 20px;
+    text-align: left;
+    border-radius: 6px;
+    line-height: 1.7;
+  }
+  .instructions strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #B57600;
+  }
+  ol { padding-left: 20px; margin: 8px 0 0; }
+  li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+  <h1>📱 実機テスト用 QRコード</h1>
+  <div class="subtitle">mentor-device-check v1.0.0</div>
+
+  <div class="qr-container">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADCklEQVR4nO2cQW7bMBBF31QCuqSBHMBHoW7QM+VIuYF0lBwggLgMION3QVKSnQJF6kZ2rNHClm0+iIQIzp/hl608+hh+fJ4BhxxyyCGHHHLoMSErRwvDAawDrEtm1nEySLVBd5PuObQ9FCVJIwAnU8/JgEZ6tp+yjkaSpHNou+45tB3Ulvd0gPgCRmgE6YDg3QAQCQyaafPuOXQHUDKDIEFqkcYSRL7gSg59CyiOjYpmCJLZsSwU//9KDt0lRNYHRUc0gjChnkbq5zONVUdEServfEwOXQOxVow0Io5/eqkNfEY8PJSV5Vkp+2QiAYR3Yzg06KLBvY/JoWugGjVGgBwrNL9M5Eiy/CpfIx4dmmdEkRBESSXXANRDTjjU07iO2AFUdUSQip6cf+hDkZJ5gsSxNPYZ8dDQOmrEulrkyQBljSjTAp8Re4DKTc53+iLXOMtIc1rqM+LhoXqT53veA0SdFSU0ljPXEY8PrdYIoKmxIkwsq0UpU8nXiD1AuR5hhLcWwli/Tm3Z6RpqFdvm+XL3Y3LoGmida1xohnmhqDHFq9g7guKrGcNxopoklrrUyYivLepTewFt1z2HblDFFpAMkZ60OhuOwghTa3E8mLbunkObQ6xEZay7myXxXKqXYVo19qixD+hkJS6kFvXJsrtSep1jRZiw7lbdc2gr6MO+RtaYmmpRotYofF9jJ9DKMZPzCo2wsshQSxG+r7EzKLsrJxiOknUUd776MGFdatHzYXZcfpMxOfQvUFUJQdhgszUmTGg4Ti3x1cozHHFxzdz5mBy6BlrvdK0Vxey0mz0Ty+6XR41HhmoVOx/NJNLJiC8GhBEj5x9PE9lut3H3HLoVVHa+wexYqthFW0D5OD/+913G5NC1ytI6YFWxjqo+y8Gq7rxV9xy6IRQkswPo2VqsC++2WKruoHsOfTHUXn4xHN6Ktojj02SkJxkYGn75bvgeoMtnurIxP7tjRmYj1VKr8lzjwaEPz3QtRcrimaCUK3v3We4CMv29zeXh/0zmkEMOOeSQQw4B/Abl0pest7wLqQAAAABJRU5ErkJggg==" alt="QR Code">
+    <div class="url">https://bsprdevtools.github.io/mentor-device-check/</div>
+  </div>
+
+  <div class="instructions">
+    <strong>テスト手順</strong>
+    <ol>
+      <li>Androidスマートフォンの<strong>カメラアプリ</strong>を起動</li>
+      <li>このQRコードにかざす</li>
+      <li>URLの通知が出たらタップ → Chromeで開く</li>
+      <li>機種コード（例：SCG29）とAndroidバージョン（例：15）が表示されるか確認</li>
+      <li>表示されたらスクショを撮って遠山さんへ</li>
+    </ol>
+  </div>
+</body>
+</html>
