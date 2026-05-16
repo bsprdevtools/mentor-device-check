@@ -73,7 +73,7 @@
   }
   .topbar .brand {
     font-weight: 600;
-    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
   .topbar .org { opacity: 0.85; }
 
@@ -152,10 +152,9 @@
   }
   .version-label {
     color: var(--color-text-sub);
-    font-size: 0.78rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
   .version-number {
     font-size: 4.0rem;
@@ -358,14 +357,14 @@
 <body>
 
 <div class="topbar">
-  <span class="brand">DEVICE CHECK TOOL</span>
+  <span class="brand">機種判定ツール</span>
   <span class="org">株式会社ベスプラ</span>
 </div>
 
 <header class="title">
   <div class="container">
-    <h1>機種判定ツール</h1>
-    <p>対面サポート現場用 ／ お客様の端末を確認し、案内アプリを判定します</p>
+    <h1>お客様の端末を判定します</h1>
+    <p>Androidバージョンに応じて、必要なアプリを案内します</p>
   </div>
 </header>
 
@@ -388,7 +387,7 @@
     <div class="card-body">
       <div id="loadingMsg" class="loading">取得中…</div>
       <div id="deviceInfo" class="version-block" style="display:none;">
-        <div class="version-label">Android Version</div>
+        <div class="version-label">Androidバージョン</div>
         <div class="version-number" id="val-platform">―</div>
         <div class="version-unit">（メジャーバージョン）</div>
       </div>
