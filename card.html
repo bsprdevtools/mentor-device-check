@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>機種判定ツール 配布カード｜株式会社ベスプラ</title>
+<style>
+  /*
+   * 機種判定ツール 配布カード（A6縦・105×148mm）
+   *
+   * 用途：
+   *   遠山さん が Amazon で NFC シールを購入 →
+   *   このカードのテンプレに印刷した上でシールを貼り付け →
+   *   ラミネート → シルバー人材（メンター）に手渡し →
+   *   メンターは受け取ったらすぐ会場で運用可能
+   *
+   * デザイン方針：
+   *   - 機種判定ツール本体（index.html）と同じネイビー基調で統一
+   *   - シルバー人材も一目で「何のツールで何をすればいいか」分かる構造
+   *   - NFCシール貼り付け位置を白破線枠で明示（直径25mm想定）
+   *   - QRコードは高解像度（900×900px）でラミネート越しでも確実に読める
+   *
+   * 印刷：
+   *   Adobe Acrobat オンライン等で PDF 化 → A4 に2枚並びで印刷 or A6 用紙
+   */
+
+  @page {
+    size: A6 portrait;
+    margin: 0;
+  }
+
+  :root {
+    --color-primary: #0A2540;
+    --color-primary-mid: #1B3A5C;
+    --color-accent: #0F62FE;
+    --color-text: #1A1A1A;
+    --color-text-sub: #4A5566;
+    --color-bg: #F4F6F9;
+    --color-card: #FFFFFF;
+    --color-border: #C5CFDB;
+    --color-nfc: #0A4A8F;
+    --color-nfc-bg: #E0EBF8;
+    --color-qr: #0F6E36;
+    --color-qr-bg: #E6F4EB;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #DDDDDD;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", "Noto Sans JP", "Meiryo", sans-serif;
+    color: var(--color-text);
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ===== A6 カード本体 ===== */
+  .card {
+    width: 105mm;
+    height: 148mm;
+    background: var(--color-card);
+    margin: 10mm auto;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+
+  @media print {
+    html, body { background: #fff; }
+    .card { margin: 0; box-shadow: none; border: none; }
+  }
+
+  /* ===== ヘッダー ===== */
+  .card-header {
+    background: var(--color-primary);
+    color: #fff;
+    padding: 4mm 5mm 3.5mm;
+    border-bottom: 1.2mm solid var(--color-accent);
+    text-align: center;
+  }
+  .card-header .brand {
+    font-size: 8pt;
+    letter-spacing: 0.1em;
+    opacity: 0.9;
+    margin-bottom: 1mm;
+  }
+  .card-header .title {
+    font-size: 16pt;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+
+  /* ===== 本体 ===== */
+  .card-body {
+    padding: 4mm 5mm 2mm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .lead {
+    font-size: 11pt;
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 2mm;
+    color: var(--color-text);
+    line-height: 1.4;
+  }
+  .lead-sub {
+    font-size: 9pt;
+    color: var(--color-text-sub);
+    text-align: center;
+    margin: 0 0 4mm;
+  }
+
+  /* ===== 2方式エリア ===== */
+  .methods {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3mm;
+    width: 100%;
+    margin-bottom: 3mm;
+  }
+
+  .method {
+    border: 0.5mm solid var(--color-border);
+    border-radius: 2mm;
+    padding: 3mm 2mm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: var(--color-card);
+  }
+
+  .method-label {
+    font-size: 9pt;
+    font-weight: 800;
+    padding: 1mm 3mm;
+    border-radius: 999px;
+    margin-bottom: 2.5mm;
+    letter-spacing: 0.04em;
+  }
+  .method.nfc .method-label {
+    background: var(--color-nfc-bg);
+    color: var(--color-nfc);
+  }
+  .method.qr .method-label {
+    background: var(--color-qr-bg);
+    color: var(--color-qr);
+  }
+
+  /* NFC シール貼り付け位置（白枠で明示） */
+  .nfc-target {
+    width: 28mm;
+    height: 28mm;
+    border: 0.6mm dashed var(--color-nfc);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2mm;
+    background: #FAFCFE;
+  }
+  .nfc-target .icon {
+    font-size: 14pt;
+    line-height: 1;
+    margin-bottom: 1mm;
+  }
+  .nfc-target .hint {
+    font-size: 6.5pt;
+    color: var(--color-nfc);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  /* QR コード画像 */
+  .qr-img {
+    width: 28mm;
+    height: 28mm;
+    margin-bottom: 2mm;
+    border: 0.4mm solid var(--color-border);
+    background: #fff;
+  }
+
+  .method-action {
+    font-size: 10pt;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.3;
+    margin-bottom: 0.5mm;
+  }
+  .method-detail {
+    font-size: 7.5pt;
+    color: var(--color-text-sub);
+    line-height: 1.3;
+  }
+
+  /* ===== 中央の案内 ===== */
+  .center-note {
+    font-size: 9pt;
+    color: var(--color-text-sub);
+    text-align: center;
+    background: var(--color-bg);
+    padding: 2mm 3mm;
+    border-radius: 1.5mm;
+    width: 100%;
+    margin-bottom: 2mm;
+    line-height: 1.4;
+  }
+  .center-note strong {
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  /* ===== フッター ===== */
+  .card-footer {
+    background: var(--color-primary);
+    color: #fff;
+    padding: 2.5mm 5mm;
+    font-size: 7.5pt;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+  .card-footer .org {
+    font-weight: 700;
+    margin-bottom: 0.5mm;
+  }
+  .card-footer .role {
+    opacity: 0.85;
+    font-size: 7pt;
+  }
+
+  /* ===== 印刷指示 ===== */
+  .print-guide {
+    max-width: 105mm;
+    margin: 4mm auto 10mm;
+    padding: 4mm 5mm;
+    background: #FFF8E1;
+    border: 1px solid #C28A00;
+    border-radius: 4px;
+    font-size: 11pt;
+    line-height: 1.65;
+    color: #7A4F00;
+  }
+  .print-guide strong {
+    display: block;
+    margin-bottom: 2mm;
+    font-size: 12pt;
+    color: #5A3800;
+  }
+  .print-guide ol {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .print-guide li { margin-bottom: 1mm; }
+
+  @media print {
+    .print-guide { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== カード本体（A6縦） ===== -->
+<div class="card">
+
+  <header class="card-header">
+    <div class="brand">株式会社ベスプラ</div>
+    <div class="title">機種判定ツール</div>
+  </header>
+
+  <div class="card-body">
+
+    <p class="lead">
+      お持ちのスマートフォンを<br>確認します
+    </p>
+    <p class="lead-sub">下のどちらかを試してください</p>
+
+    <div class="methods">
+
+      <!-- NFC 方式 -->
+      <div class="method nfc">
+        <span class="method-label">📱 NFC</span>
+        <div class="nfc-target">
+          <span class="icon">📡</span>
+          <span class="hint">ここに<br>シール</span>
+        </div>
+        <div class="method-action">スマホを<br>かざす</div>
+        <div class="method-detail">背面の上の方を<br>当ててください</div>
+      </div>
+
+      <!-- QR 方式 -->
+      <div class="method qr">
+        <span class="method-label">▣ QR</span>
+        <img class="qr-img" src="card_qr.png" alt="QRコード">
+        <div class="method-action">カメラで<br>読みとる</div>
+        <div class="method-detail">カメラアプリで<br>読みとります</div>
+      </div>
+
+    </div>
+
+    <div class="center-note">
+      どちらも<strong>同じ画面</strong>が開きます
+    </div>
+
+  </div>
+
+  <footer class="card-footer">
+    <div class="org">株式会社ベスプラ</div>
+    <div class="role">対面サポート現場用</div>
+  </footer>
+
+</div>
+
+<!-- ===== 印刷ガイド（画面のみ・印刷時は非表示） ===== -->
+<div class="print-guide">
+  <strong>印刷・運用手順</strong>
+  <ol>
+    <li>このページを <strong>Adobe Acrobat オンライン</strong>等で PDF 化</li>
+    <li>A4 用紙に2枚並びで印刷 もしくは A6 用紙に等倍印刷</li>
+    <li>NFCシール（NTAG215 推奨）に URL を書き込む</li>
+    <li>カードの <strong>NFC 円の枠</strong> にシールを貼る</li>
+    <li>ラミネート加工で防水・防汚</li>
+    <li>シルバー人材へ手渡し or 郵送</li>
+  </ol>
+</div>
+
+</body>
+</html>
