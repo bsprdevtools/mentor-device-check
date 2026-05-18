@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#F97F0C">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Accept-CH" content="Sec-CH-UA-Platform-Version">
+<meta http-equiv="Delegate-CH" content="Sec-CH-UA-Platform-Version">
+<title>ヘルスコネクト設定ガイド｜脳にいいアプリ</title>
+<style>
+  /*
+   * ============================================================
+   * 脳にいいアプリ ヘルスコネクト設定ガイド（公開版）
+   * - 公式オレンジ（#F97F0C）基調（braincure.jp 公式CSSから抽出）
+   * - 点進捗バー（独自デザイン）
+   * - ステップ式チェックリスト
+   * - Androidバージョン自動判定（UA-CH platformVersion）
+   *   - 14以上：STEP1（HCインストール）省略、2ステップ表示
+   *   - 9〜13：3ステップ表示
+   *   - 8以下：「HC非対応」表示
+   *   - 取得失敗：3ステップ表示してフォールバック
+   * - 対面サポート / 配信流入 / 問い合わせ対応 / シル人引継ぎ で兼用
+   * ============================================================
+   */
+
+  :root {
+    /* 脳にいいアプリ 公式カラー（braincure.jp CSSから抽出） */
+    --color-primary: #F97F0C;       /* メインオレンジ（33回使用） */
+    --color-primary-dark: #F9690A;  /* 濃いオレンジ（ホバー/押下） */
+    --color-primary-darker: #D85604;/* さらに濃い（ボタン影） */
+    --color-primary-light: #FBA248; /* 明るめ（グラデ用） */
+    --color-primary-pale: #FFF5ED;  /* 背景オレンジ（4回使用） */
+
+    /* セカンダリ・補助：公式ネイビー #005CAF (7回使用) */
+    --color-cta: #005CAF;
+    --color-cta-dark: #00457F;
+    --color-text: #1A1A1A;
+    --color-text-sub: #5A6473;
+    --color-text-muted: #8A93A0;
+
+    --color-bg: #FAFBFC;
+    --color-card: #FFFFFF;
+    --color-border: #E5E9EE;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --radius-pill: 999px;
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-card: 0 2px 8px rgba(249,127,12,0.10);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", "Noto Sans JP", "Meiryo", sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.65;
+    -webkit-text-size-adjust: 100%;
+    font-size: 16px;
+  }
+
+  /* ===== ヘッダー ===== */
+  header.app-header {
+    background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: #fff;
+    padding: 16px 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(249,127,12,0.25);
+  }
+  header.app-header .back {
+    position: absolute;
+    left: 8px;
+    color: #fff;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 12px;
+    font-family: inherit;
+    line-height: 1;
+  }
+  header.app-header h1 {
+    margin: 0;
+    font-size: 1.18rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  header.app-header .subtitle {
+    position: absolute;
+    bottom: 4px;
+    right: 14px;
+    font-size: 0.7rem;
+    opacity: 0.85;
+    letter-spacing: 0.04em;
+  }
+
+  /* ===== Main ===== */
+  main {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 16px 16px 100px;
+  }
+
+  /* ===== 点進捗バー（差別化要素） ===== */
+  .dot-progress {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 18px 18px 16px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-card);
+  }
+  .dot-progress-label {
+    font-size: 0.78rem;
+    color: var(--color-text-sub);
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .dot-progress-track {
+    display: grid;
+    grid-template-columns: repeat(var(--steps, 3), 1fr);
+    align-items: center;
+    gap: 0;
+    position: relative;
+    padding: 0 6%;
+    margin-bottom: 10px;
+  }
+  .dot-progress-track::before {
+    content: '';
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    top: 50%;
+    height: 4px;
+    background: var(--color-border);
+    border-radius: 2px;
+    transform: translateY(-50%);
+    z-index: 0;
+  }
+  .dot-progress-track::after {
+    content: '';
+    position: absolute;
+    left: 12%;
+    top: 50%;
+    height: 4px;
+    background: var(--color-primary);
+    border-radius: 2px;
+    transform: translateY(-50%);
+    z-index: 1;
+    transition: width 0.3s;
+    width: var(--filled, 0%);
+  }
+  .dot {
+    position: relative;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid var(--color-border);
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.95rem;
+    justify-self: center;
+    transition: all 0.3s;
+  }
+  .dot.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+    transform: scale(1.1);
+    box-shadow: 0 0 0 4px rgba(249,127,12,0.20);
+  }
+  .dot.done {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+  }
+  .dot.done::after {
+    content: '✓';
+    font-size: 1.05rem;
+  }
+  .dot.done .dot-num { display: none; }
+  .dot-labels {
+    display: grid;
+    grid-template-columns: repeat(var(--steps, 3), 1fr);
+    padding: 0 6%;
+    margin-top: 6px;
+  }
+  .dot-label {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--color-text-sub);
+    font-weight: 600;
+    line-height: 1.3;
+    padding: 0 2px;
+  }
+  .dot-label.active {
+    color: var(--color-primary-dark);
+    font-weight: 800;
+  }
+
+  /* ===== 概要説明 ===== */
+  .overview-intro {
+    background: var(--color-primary-pale);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: var(--color-primary-darker);
+  }
+  .overview-intro strong { color: var(--color-primary-darker); }
+
+  /* ===== ステップ一覧（縦並び） ===== */
+  .step-list {
+    margin-bottom: 24px;
+  }
+  .step-card {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .step-card .num {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--color-primary-pale);
+    color: var(--color-primary-dark);
+    font-weight: 800;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-card.done .num {
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .step-card.done .num::after { content: '✓'; }
+  .step-card.done .num .num-text { display: none; }
+  .step-card .body {
+    line-height: 1.4;
+  }
+  .step-card .body .title {
+    font-weight: 700;
+    font-size: 1.0rem;
+    color: var(--color-text);
+    margin-bottom: 2px;
+  }
+  .step-card .body .sub {
+    font-size: 0.83rem;
+    color: var(--color-text-sub);
+  }
+  .step-card .arrow {
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    font-weight: 300;
+  }
+
+  /* ===== ステップ詳細 ===== */
+  .detail-block {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .detail-block h2 {
+    color: var(--color-primary-dark);
+    font-size: 1.12rem;
+    font-weight: 800;
+    margin: 0 0 10px;
+    letter-spacing: 0.01em;
+  }
+  .detail-block p {
+    margin: 0 0 14px;
+    line-height: 1.7;
+    color: var(--color-text);
+    font-size: 0.98rem;
+  }
+  .detail-block .caution {
+    background: #FFF8E1;
+    border-left: 3px solid #C28A00;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: #7A4F00;
+    margin: 12px 0 14px;
+  }
+  .image-placeholder {
+    background: linear-gradient(135deg, #FFF5EC 0%, #FFEBD9 100%);
+    border: 1.5px dashed var(--color-primary-light);
+    border-radius: var(--radius);
+    padding: 28px 16px;
+    text-align: center;
+    color: var(--color-primary-dark);
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  /* ===== ボタン ===== */
+  .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-pill);
+    font-size: 1.05rem;
+    font-weight: 800;
+    text-decoration: none;
+    text-align: center;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--color-primary-darker), 0 6px 12px rgba(249,127,12,0.28);
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+    transition: transform 0.08s, box-shadow 0.08s;
+  }
+  .btn-primary:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--color-primary-darker), 0 2px 6px rgba(249,127,12,0.22);
+  }
+  .btn-primary .icon-mark {
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: -2px;
+  }
+
+  .btn-secondary {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    background: #fff;
+    color: var(--color-primary-dark);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-pill);
+    font-size: 0.98rem;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    font-family: inherit;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .btn-secondary:active {
+    background: var(--color-primary-pale);
+  }
+
+  /* ===== 完了画面 ===== */
+  .complete-screen {
+    text-align: center;
+    padding: 32px 18px 24px;
+    background: #fff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+  .complete-screen .badge {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: #fff;
+    font-size: 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    box-shadow: 0 6px 16px rgba(249,127,12,0.35);
+  }
+  .complete-screen h2 {
+    color: var(--color-primary-dark);
+    font-size: 1.32rem;
+    margin: 0 0 12px;
+    font-weight: 800;
+  }
+  .complete-screen p {
+    color: var(--color-text);
+    line-height: 1.75;
+    margin: 0 0 22px;
+    font-size: 0.98rem;
+  }
+
+  /* ===== 画面切替 ===== */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ===== Android 8以下：HC非対応画面 ===== */
+  .danger-card {
+    background: #FDF3F3;
+    border: 1px solid #E0A0A0;
+    border-left: 4px solid #B91C1C;
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+  .danger-card h2 {
+    color: #991B1B;
+    font-size: 1.05rem;
+    margin: 0 0 10px;
+    font-weight: 800;
+  }
+  .danger-card p {
+    margin: 0 0 12px;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    color: #5B1212;
+  }
+  .danger-card p:last-child { margin-bottom: 0; }
+
+  /* ===== ローディング ===== */
+  .loading {
+    text-align: center;
+    padding: 40px 16px;
+    color: var(--color-text-sub);
+    font-size: 0.95rem;
+  }
+
+  /* ===== iOS/PC向け案内 ===== */
+  .notice {
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    background: #FFF8E1;
+    border-left: 4px solid #C28A00;
+    color: #7A4F00;
+  }
+  .notice strong { display: block; margin-bottom: 3px; font-size: 1.0rem; }
+  .ios-only, .desktop-only { display: none; }
+  body.is-ios .ios-only { display: block; }
+  body.is-ios .android-content { display: none; }
+  body.is-desktop .desktop-only { display: block; }
+  body.is-desktop .android-content { display: none; }
+</style>
+</head>
+<body>
+
+<!-- ===== ローディング画面 ===== -->
+<div class="screen active" id="screen-loading">
+  <header class="app-header">
+    <h1>ヘルスコネクト設定</h1>
+    <span class="subtitle">脳にいいアプリ</span>
+  </header>
+  <main>
+    <div class="loading">お使いの端末を確認しています…</div>
+  </main>
+</div>
+
+<!-- ===== iOS向け案内 ===== -->
+<div class="screen" id="screen-ios">
+  <header class="app-header">
+    <h1>ヘルスコネクト設定</h1>
+    <span class="subtitle">脳にいいアプリ</span>
+  </header>
+  <main>
+    <div class="notice">
+      <strong>このガイドはAndroid端末専用です</strong>
+      iPhoneにはヘルスコネクト機能はありません。<br>
+      脳にいいアプリは iPhone でも歩数取得ができますので、そのままご利用ください。
+    </div>
+  </main>
+</div>
+
+<!-- ===== PC向け案内 ===== -->
+<div class="screen" id="screen-desktop">
+  <header class="app-header">
+    <h1>ヘルスコネクト設定</h1>
+    <span class="subtitle">脳にいいアプリ</span>
+  </header>
+  <main>
+    <div class="notice">
+      <strong>このガイドはAndroidスマートフォン専用です</strong>
+      お使いのAndroidスマートフォンで開いてご利用ください。<br>
+      QRコードがある場合は、スマホのカメラで読み取れます。
+    </div>
+  </main>
+</div>
+
+<!-- ===== Android 8以下：非対応案内 ===== -->
+<div class="screen" id="screen-unsupported">
+  <header class="app-header">
+    <button class="back" onclick="history.back()">‹</button>
+    <h1>ヘルスコネクト設定</h1>
+    <span class="subtitle">脳にいいアプリ</span>
+  </header>
+  <main>
+    <div class="danger-card">
+      <h2>お使いの端末はヘルスコネクトに対応していません</h2>
+      <p>
+        ヘルスコネクトは <strong>Android 9 以上</strong> の端末でご利用いただけます。
+        お使いの端末はそれより前のバージョンのため、ヘルスコネクトのインストールができません。
+      </p>
+      <p>
+        脳にいいアプリは現在ご利用中のままお使いいただけます。
+        ヘルスコネクトをご利用になる場合は、Android 9 以上の端末への買い替えをご検討ください。
+      </p>
+    </div>
+  </main>
+</div>
+
+<!-- ===== 画面1：概要 ===== -->
+<div class="screen" id="screen-overview">
+
+  <header class="app-header">
+    <button class="back" onclick="goBack()">‹</button>
+    <h1>ヘルスコネクト設定</h1>
+    <span class="subtitle">脳にいいアプリ</span>
+  </header>
+
+  <main>
+
+    <!-- 点進捗バー（独自） -->
+    <div class="dot-progress" id="overview-progress">
+      <div class="dot-progress-label">設定の進み具合</div>
+      <div class="dot-progress-track" id="dots-track">
+        <!-- JS で動的生成 -->
+      </div>
+      <div class="dot-labels" id="dots-labels">
+        <!-- JS で動的生成 -->
+      </div>
+    </div>
+
+    <div class="overview-intro">
+      <strong>ヘルスコネクト</strong>と<strong>Google Fit</strong>を連携させて、歩数計測を行います。
+      下の手順に沿って、順番に設定してください。
+    </div>
+
+    <div class="step-list" id="step-list">
+      <!-- JS で動的生成 -->
+    </div>
+
+    <button class="btn-primary" onclick="startSetup()">
+      設定をはじめる
+    </button>
+
+  </main>
+
+</div>
+
+<!-- ===== 画面2：STEP1 詳細 ===== -->
+<div class="screen" id="screen-step1">
+
+  <header class="app-header">
+    <button class="back" onclick="showOverview()">‹</button>
+    <h1>ヘルスコネクト設定</h1>
+    <span class="subtitle">1 / 3</span>
+  </header>
+
+  <main>
+
+    <!-- 進捗バー（同じものを使用） -->
+    <div class="dot-progress" id="step1-progress"></div>
+
+    <div class="detail-block">
+      <h2>STEP 1 ／ ヘルスコネクトを入れる</h2>
+      <p>
+        お使いの端末に、まず <strong>ヘルスコネクト</strong> アプリをインストールします。
+        下のボタンを押すと、Playストアが開きます。
+      </p>
+
+      <div class="image-placeholder">
+        Google Fit → ヘルスコネクト → 脳にいいアプリ<br>
+        連携イメージ画像（差し替え予定）
+      </div>
+
+      <a class="btn-primary" href="https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata" target="_blank" rel="noopener noreferrer">
+        ヘルスコネクトを入手する
+      </a>
+    </div>
+
+    <div class="detail-block">
+      <p>
+        インストール後、ヘルスコネクトを起動して <strong>「使ってみる」</strong> をタップしてください。
+      </p>
+
+      <div class="caution">
+        ※ヘルスコネクトはホーム画面に表示されない場合があります。Playストアの「開く」または端末の「設定」アプリから起動できます。<br>
+        ※既にインストール済みの場合は、Playストアでは「開く」と表示されます。<br>
+        ※お使いの端末・Android OSバージョンにより、画面のデザインや項目名が異なる場合があります。
+      </div>
+
+      <div class="image-placeholder">
+        ヘルスコネクト「使ってみる」<br>画面イメージ（差し替え予定）
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="goToStep2()">
+      次の手順へ
+    </button>
+
+  </main>
+
+</div>
+
+<!-- ===== 画面3：STEP2 詳細 ===== -->
+<div class="screen" id="screen-step2">
+
+  <header class="app-header">
+    <button class="back" onclick="showOverview()">‹</button>
+    <h1>ヘルスコネクト設定</h1>
+    <span class="subtitle" id="step2-subtitle">2 / 3</span>
+  </header>
+
+  <main>
+
+    <div class="dot-progress" id="step2-progress"></div>
+
+    <div class="detail-block">
+      <h2>STEP 2 ／ Google Fit を設定する</h2>
+      <p>
+        歩数データを取得するため、<strong>ヘルスコネクト</strong>と<strong>Google Fit</strong>を連携させます。
+        Google Fit を起動して、画面下のプロフィールアイコン（人型のマーク）をタップしてください。
+      </p>
+
+      <div class="image-placeholder">
+        Google Fit プロフィールアイコン位置<br>画面イメージ（差し替え予定）
+      </div>
+
+      <div class="caution">
+        ※Google Fit が未インストールの場合は、下のボタンからインストールしてください。
+      </div>
+
+      <a class="btn-primary" href="https://play.google.com/store/apps/details?id=com.google.android.apps.fitness" target="_blank" rel="noopener noreferrer">
+        Google Fit を開く／入手する
+      </a>
+    </div>
+
+    <div class="detail-block">
+      <p>
+        画面右上の<strong>設定マーク</strong>をタップして、
+        ヘルスコネクト内の <strong>「Fit とヘルスコネクトを同期する」</strong> を ON にしてください。
+      </p>
+
+      <div class="image-placeholder">
+        「Fit とヘルスコネクトを同期」<br>ON 画面イメージ（差し替え予定）
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="goToStep3()">
+      次の手順へ
+    </button>
+
+  </main>
+
+</div>
+
+<!-- ===== 画面4：STEP3 詳細 ===== -->
+<div class="screen" id="screen-step3">
+
+  <header class="app-header">
+    <button class="back" onclick="showOverview()">‹</button>
+    <h1>ヘルスコネクト設定</h1>
+    <span class="subtitle" id="step3-subtitle">3 / 3</span>
+  </header>
+
+  <main>
+
+    <div class="dot-progress" id="step3-progress"></div>
+
+    <div class="detail-block">
+      <h2>STEP 3 ／ 脳にいいアプリと連携する</h2>
+      <p>
+        最後にヘルスコネクト側の設定をします。
+        ヘルスコネクトを起動して、<strong>「アプリの権限」</strong> をタップしてください。
+      </p>
+
+      <div class="caution">
+        ※ヘルスコネクトはホーム画面に表示されない場合があります。Playストアの「開く」または端末の「設定」アプリから起動できます。<br>
+        ※お使いの端末・Android OSバージョンにより、画面のデザインや項目名が異なる場合があります。
+      </div>
+
+      <div class="image-placeholder">
+        ヘルスコネクト「アプリの権限」<br>画面イメージ（差し替え予定）
+      </div>
+
+      <a class="btn-primary" href="https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata" target="_blank" rel="noopener noreferrer">
+        ヘルスコネクトを開く
+      </a>
+    </div>
+
+    <div class="detail-block">
+      <p>
+        「アクセスが許可されていないアプリ」の中にある <strong>脳にいいアプリ</strong> をタップして、
+        歩数データの読み取りを <strong>許可</strong> してください。
+      </p>
+
+      <div class="image-placeholder">
+        「脳にいいアプリ」を選択<br>画面イメージ（差し替え予定）
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="completeSetup()">
+      設定を完了する
+    </button>
+
+  </main>
+
+</div>
+
+<!-- ===== 画面5：完了 ===== -->
+<div class="screen" id="screen-complete">
+
+  <header class="app-header">
+    <h1>設定完了</h1>
+    <span class="subtitle">脳にいいアプリ</span>
+  </header>
+
+  <main>
+    <div class="complete-screen">
+      <div class="badge">✓</div>
+      <h2>設定が完了しました</h2>
+      <p>
+        これで歩数データが<br>
+        脳にいいアプリへ自動で取り込まれます。<br><br>
+        毎日歩いて、ポイントを貯めて、<br>
+        健やかな毎日を過ごしましょう。
+      </p>
+      <button class="btn-primary" onclick="showOverview()">
+        ガイドを閉じる
+      </button>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  /** 端末判定で確定したバージョン（数値、null=取得失敗） */
+  let detectedVersion = null;
+
+  /** 表示モード: 'overview' | 'step1' | 'step2' | 'step3' | 'complete' | 'unsupported' | 'ios' | 'desktop' */
+  let currentStep = 0;
+
+  // ===== Android バージョン自動判定 =====
+  const UA = navigator.userAgent || '';
+  const isIOS = /iPhone|iPad|iPod/i.test(UA) && !window.MSStream;
+  const isAndroidUA = /Android/i.test(UA);
+  const isMobileUA = isIOS || isAndroidUA || /Mobile/i.test(UA);
+  const isDesktop = !isMobileUA;
+  const debugVersion = (function() {
+    const m = location.search.match(/[?&]v=(\d+)/);
+    return m ? parseInt(m[1], 10) : null;
+  })();
+
+  async function detectAndRoute() {
+    // デバッグ用：?v=14 などで強制指定
+    if (debugVersion != null) {
+      handleAndroidVersion(debugVersion);
+      return;
+    }
+    // iPhone
+    if (isIOS) {
+      showScreen('screen-ios');
+      return;
+    }
+    // PC
+    if (isDesktop) {
+      showScreen('screen-desktop');
+      return;
+    }
+    // Android: UA-CH platformVersion で取得
+    let platformVersion = '';
+    if (navigator.userAgentData && typeof navigator.userAgentData.getHighEntropyValues === 'function') {
+      try {
+        const v = await navigator.userAgentData.getHighEntropyValues(['platformVersion']);
+        platformVersion = v.platformVersion || '';
+      } catch (e) {}
+    }
+    const major = platformVersion ? parseInt(String(platformVersion).split('.')[0], 10) : null;
+    handleAndroidVersion(major);
+  }
+
+  function handleAndroidVersion(major) {
+    detectedVersion = (major != null && !isNaN(major)) ? major : null;
+
+    if (detectedVersion != null && detectedVersion <= 8) {
+      // Android 8以下：HC非対応
+      showScreen('screen-unsupported');
+      return;
+    }
+    // それ以外（14+ / 9-13 / 取得失敗）は概要画面へ
+    // 取得失敗時はフォールバックで3ステップ表示（メンター/ユーザーが端末で判断）
+    renderProgress();
+    renderStepList();
+    showScreen('screen-overview');
+  }
+
+  function getSteps() {
+    // Android 14以上：HCはOS標準搭載のためSTEP1省略
+    if (detectedVersion != null && detectedVersion >= 14) {
+      return [
+        { num: 1, title: 'Google Fit を設定する', sub: 'プロフィールから同期をON' },
+        { num: 2, title: '脳にいいアプリと連携する', sub: 'ヘルスコネクトで権限許可' },
+      ];
+    }
+    // Android 9〜13 もしくは取得失敗：3ステップ表示
+    return [
+      { num: 1, title: 'ヘルスコネクトを入れる', sub: 'Playストアからインストール' },
+      { num: 2, title: 'Google Fit を設定する', sub: 'プロフィールから同期をON' },
+      { num: 3, title: '脳にいいアプリと連携する', sub: 'ヘルスコネクトで権限許可' },
+    ];
+  }
+
+  function renderProgress() {
+    const steps = getSteps();
+    const total = steps.length;
+    const filled = total > 1 ? (currentStep / (total - 1)) * 100 : 0;
+
+    // 概要画面の進捗
+    const containers = ['overview-progress', 'step1-progress', 'step2-progress', 'step3-progress'];
+    containers.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.setProperty('--steps', total);
+      el.style.setProperty('--filled', filled + '%');
+      el.innerHTML = `
+        <div class="dot-progress-label">設定の進み具合</div>
+        <div class="dot-progress-track" style="--steps:${total};--filled:${filled}%;">
+          ${steps.map((s, i) => {
+            let cls = '';
+            if (i < currentStep) cls = 'done';
+            else if (i === currentStep) cls = 'active';
+            return `<div class="dot ${cls}"><span class="dot-num">${s.num}</span></div>`;
+          }).join('')}
+        </div>
+        <div class="dot-labels" style="--steps:${total};">
+          ${steps.map((s, i) => `<div class="dot-label ${i === currentStep ? 'active' : ''}">${s.title.split('を')[0]}</div>`).join('')}
+        </div>
+      `;
+    });
+  }
+
+  function renderStepList() {
+    const steps = getSteps();
+    const list = document.getElementById('step-list');
+    list.innerHTML = steps.map((s, i) => `
+      <div class="step-card ${i < currentStep ? 'done' : ''}">
+        <div class="num"><span class="num-text">${s.num}</span></div>
+        <div class="body">
+          <div class="title">${s.title}</div>
+          <div class="sub">${s.sub}</div>
+        </div>
+        <div class="arrow">›</div>
+      </div>
+    `).join('');
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function showOverview() {
+    renderProgress();
+    renderStepList();
+    showScreen('screen-overview');
+  }
+
+  function isV14Plus() {
+    return detectedVersion != null && detectedVersion >= 14;
+  }
+
+  function startSetup() {
+    currentStep = 0;
+    renderProgress();
+    if (isV14Plus()) {
+      // 14+ は STEP1 をスキップして Google Fit から
+      showScreen('screen-step2');
+    } else {
+      showScreen('screen-step1');
+    }
+  }
+
+  function goToStep2() {
+    currentStep = isV14Plus() ? 0 : 1;
+    renderProgress();
+    showScreen('screen-step2');
+  }
+
+  function goToStep3() {
+    currentStep = isV14Plus() ? 1 : 2;
+    renderProgress();
+    showScreen('screen-step3');
+  }
+
+  function completeSetup() {
+    currentStep = getSteps().length;
+    renderProgress();
+    renderStepList();
+    showScreen('screen-complete');
+  }
+
+  function goBack() {
+    history.back();
+  }
+
+  // 初期化：端末判定→該当画面表示
+  detectAndRoute();
+</script>
+</body>
+</html>

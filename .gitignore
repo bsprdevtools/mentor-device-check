@@ -54,7 +54,13 @@ secrets/
 05_security/
 06_pre_release_audit.md
 07_release_prep/
+08_v2_redesign/
+09_legal_check.md
 _internal_README.md
 
 # ただし NFCタグ書き込みガイド・公開手順書は別途リポジトリ直下へ
 # コピーしてから公開する（07_release_prep/ そのものは公開しない）
+
+# ---- ローカル動作確認用ファイル ----
+# *-local.html は開発確認用なので公開しない
+*-local.html
